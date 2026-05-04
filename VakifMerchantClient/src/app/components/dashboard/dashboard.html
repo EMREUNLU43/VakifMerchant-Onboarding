@@ -1,0 +1,305 @@
+<div class="vb-container">
+  <header class="vb-top-header">
+    <div class="vb-logo-box">VAKIFBANK</div>
+    <nav class="vb-main-nav">
+      <button class="nav-btn" (click)="sayfayaGit('/login')">GİRİŞ</button>
+      <!-- 🚀 GÜNCELLENDİ: Oturum yerine Yeni Başvuru yazdık ve Listeyi ekledik -->
+      <button class="nav-btn active" (click)="sayfayaGit('/dashboard')">YENİ BAŞVURU</button>
+      <button class="nav-btn" (click)="sayfayaGit('/basvuru-listesi')">BAŞVURU LİSTESİ</button>
+      <button class="nav-btn" (click)="sayfayaGit('/satis-gucu')">SATIŞ GÜCÜ/MÜŞTERİ ANALİTİĞİ</button>
+      <button class="nav-btn" (click)="sayfayaGit('/ayarlar')">AYARLAR</button>
+      <button class="nav-btn" (click)="sayfayaGit('/gelistirme')">GELİŞTİRME</button>
+    </nav>
+  </header>
+
+  <div class="vb-toolbar">
+    <div class="tool-group"><div class="tool-btn"><span class="icon">👥</span>Son Müşteriler</div></div>
+
+    <div class="tool-group" style="margin-left: 20px; font-weight: bold; color: #333; background: #fff8e1; padding: 5px 15px; border-radius: 4px; border: 1px solid #ffb800; display: flex; gap: 15px;">
+      <span>🇺🇸 USD: <span style="color: green;">{{ dolarKuru }}</span></span>
+      <span>🇪🇺 EUR: <span style="color: green;">{{ euroKuru }}</span></span>
+    </div>
+
+    <div class="tool-group actions" style="margin-left: auto;">
+      <div class="tool-btn logout" (click)="logout()"><span class="icon" style="color: red;">🚪</span>Oturum Kapat</div>
+    </div>
+  </div>
+
+  <main class="vb-content-area">
+    <div class="page-tabs"><span class="page-tab active">Üye İşyeri Başvuru Giriş ✖</span></div>
+
+    <form #basvuruForm="ngForm" (ngSubmit)="basvuruyuKaydet(basvuruForm)">
+
+      <div class="top-forms">
+        <fieldset class="vb-fieldset">
+          <legend>Vergi No & TC Kimlik No Doğrulama (ZORUNLU)</legend>
+          <div class="form-row">
+            <div class="form-group" style="flex-direction: column; align-items: flex-start;">
+              <div style="display: flex; align-items: center;">
+                <label style="width:100px;">TC Kimlik No *</label>
+                <input type="text" [(ngModel)]="basvuruModel.tcKimlikNo" name="tcKimlikNo" required minlength="11" maxlength="11" pattern="^[0-9]*$" #tcKim="ngModel" [ngClass]="{'invalid-input': tcKim.invalid && tcKim.touched}">
+              </div>
+            </div>
+            <div class="form-group" style="flex-direction: column; align-items: flex-start;">
+              <div style="display: flex; align-items: center;">
+                <label style="width:100px;">Vergi No *</label>
+                <input type="text" [(ngModel)]="basvuruModel.vergiNo" name="vergiNo" required minlength="10" maxlength="10" pattern="^[0-9]*$" #vergi="ngModel" [ngClass]="{'invalid-input': vergi.invalid && vergi.touched}">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="inner-tabs-container">
+        <div class="inner-tabs-header">
+          <button type="button" class="inner-tab" [class.active]="aktifSekme === 'ozluk'" (click)="sekmeDegistir('ozluk')">Özlük Bilgileri</button>
+          <button type="button" class="inner-tab" [class.active]="aktifSekme === 'pos'" (click)="sekmeDegistir('pos')">POS Bilgileri</button>
+          <button type="button" class="inner-tab" [class.active]="aktifSekme === 'calisma'" (click)="sekmeDegistir('calisma')">Çalışma Şartları</button>
+          <button type="button" class="inner-tab" [class.active]="aktifSekme === 'kredi'" (click)="sekmeDegistir('kredi')">Kredibilite Bilgileri</button>
+          <button type="button" class="inner-tab" [class.active]="aktifSekme === 'dokuman'" (click)="sekmeDegistir('dokuman')" style="background-color: #f1f8e9; border-bottom: 3px solid #7cb342;">📂 Dokümanlar</button>
+        </div>
+
+        <div class="inner-tab-content">
+
+          <div *ngIf="aktifSekme === 'ozluk'">
+            <fieldset class="vb-fieldset">
+              <legend>Üye İşyeri Bilgileri</legend>
+              <div class="form-row">
+                <div class="form-group"><label>Vadesiz Hesap No</label><select [(ngModel)]="basvuruModel.vadesizHesapNo" name="hesapNo"><option>00158007344740577</option></select></div>
+                <div class="form-group"><label>İşyeri Tabela Adı</label><input type="text" [(ngModel)]="basvuruModel.tabelaAdi" name="tabelaAdi" class="long-input"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Ticari Sicil No</label>
+                  <input type="text" [(ngModel)]="basvuruModel.ticariSicilNo" name="sicilNo" (keypress)="sadeceRakam($event)" maxlength="10" placeholder="Örn: 123456">
+                </div>
+                <div class="form-group">
+                  <label>Yönetici Adı Soyadı</label>
+                  <input type="text" [(ngModel)]="basvuruModel.yoneticiAdi" name="yonetici" class="long-input" (keypress)="sadeceHarf($event)">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Sicil Kayıt Tarihi *</label>
+                  <input type="date" [(ngModel)]="basvuruModel.kayitTarihi" name="kayitTarihi" required #kayitTarihiCtrl="ngModel" [ngClass]="{'invalid-input': kayitTarihiCtrl.invalid && kayitTarihiCtrl.touched}">
+                </div>
+                <div class="form-group"><label>Vergi Dairesi</label><input type="text" [(ngModel)]="basvuruModel.vergiDairesi" name="vergiDairesi" class="long-input"></div>
+              </div>
+            </fieldset>
+
+            <fieldset class="vb-fieldset">
+              <legend>İletişim Bilgileri</legend>
+              <div class="form-row">
+                <div class="form-group"><label>POS Kurulum Adresi</label><textarea [(ngModel)]="basvuruModel.adres" name="adres" class="long-input" rows="2" style="width: 400px;"></textarea></div>
+              </div>
+
+              <div class="form-row" style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                <div style="width: 100%;">
+                  <label style="font-weight: bold; margin-bottom: 5px; display: block; color: #d32f2f;">📍 İşyeri Konumunu Haritadan Seçiniz *</label>
+                  <div style="border: 2px solid #ffb800; border-radius: 4px; overflow: hidden;">
+                    <google-map height="300px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="haritayaTiklandi($event)">
+                      <map-marker [position]="markerPosition"></map-marker>
+                    </google-map>
+                  </div>
+                  <div style="margin-top: 5px; font-size: 12px; color: #666; font-weight: bold;">
+                    Seçilen Koordinat: Enlem: {{basvuruModel.enlem}} | Boylam: {{basvuruModel.boylam}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group">
+                  <label>İl</label>
+                  <select [(ngModel)]="basvuruModel.il" name="il">
+                    <option *ngFor="let sehir of iller" [value]="sehir">{{ sehir }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>İlçe</label>
+                  <input type="text" [(ngModel)]="basvuruModel.ilce" name="ilce" (keypress)="sadeceHarf($event)" placeholder="Örn: Kadıköy">
+                </div>
+                <div class="form-group">
+                  <label>Posta Kodu</label>
+                  <input type="text" [(ngModel)]="basvuruModel.postaKodu" name="postaKodu" class="small-input" maxlength="5" (keypress)="sadeceRakam($event)" placeholder="Örn: 34000">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>GSM No *</label>
+                  <input type="text"
+                         [(ngModel)]="basvuruModel.telefon"
+                         name="telefon"
+                         required
+                         minlength="11"
+                         maxlength="11"
+                         pattern="^0[0-9]{10}$"
+                         (keypress)="sadeceRakam($event)"
+                         placeholder="Örn: 05551234567"
+                         #tel="ngModel"
+                         [ngClass]="{'invalid-input': tel.invalid && tel.touched}">
+                </div>
+                <div class="form-group"><label>E-Posta *</label><input type="email" [(ngModel)]="basvuruModel.email" name="email" required email #mail="ngModel" [ngClass]="{'invalid-input': mail.invalid && mail.touched}"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Email Ekstre</label><input type="checkbox" [(ngModel)]="basvuruModel.emailEkstre" name="emailEkstre"></div>
+                <div class="form-group"><label>Basılı Ekstre</label><input type="checkbox" [(ngModel)]="basvuruModel.basiliEkstre" name="basiliEkstre"></div>
+              </div>
+            </fieldset>
+
+            <fieldset class="vb-fieldset">
+              <legend>İşyeri Sahibi Özlük Bilgileri</legend>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>TC Kimlik No</label>
+                  <input type="text" [(ngModel)]="basvuruModel.sahipTc" name="sahipTc" maxlength="11" minlength="11" (keypress)="sadeceRakam($event)" placeholder="11 Haneli TC Kimlik No">
+                </div>
+                <div class="form-group">
+                  <label>Adı Soyadı</label>
+                  <input type="text" [(ngModel)]="basvuruModel.sahipAd" name="sahipAd" class="long-input" (keypress)="sadeceHarf($event)">
+                </div>
+                <div class="form-group">
+                  <label>Cep Telefonu</label>
+                  <input type="text" [(ngModel)]="basvuruModel.sahipTel" name="sahipTel" maxlength="11" minlength="11" (keypress)="sadeceRakam($event)" placeholder="Örn: 05551234567">
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div *ngIf="aktifSekme === 'pos'">
+            <fieldset class="vb-fieldset">
+              <legend>POS Bilgileri</legend>
+              <div class="radio-group" style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">
+                <input type="radio" [(ngModel)]="basvuruModel.posTipi" name="posTipi" value="fiziki"> <label>Fiziki POS</label>
+                <input type="radio" [(ngModel)]="basvuruModel.posTipi" name="posTipi" value="sanal" style="margin-left:20px;"> <label>Sanal POS</label>
+              </div>
+              <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group"><label>Masaüstü POS Sayısı</label><input type="number" [(ngModel)]="basvuruModel.masaustuPosSayisi" name="masaPos" class="small-input"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Mobil POS (GSM)</label><input type="number" [(ngModel)]="basvuruModel.mobilPosSayisi" name="mobilPos" class="small-input"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Yazarkasa POS</label><input type="number" [(ngModel)]="basvuruModel.yazarkasaPosSayisi" name="yazarkasaPos" class="small-input"></div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div *ngIf="aktifSekme === 'calisma'">
+            <fieldset class="vb-fieldset">
+              <legend>İşyeri Marka Paylaşım Tipi</legend>
+              <div class="radio-group">
+                <input type="radio" [(ngModel)]="basvuruModel.markaPaylasim" name="marka" value="vakif"> <label>VakıfBank İşyeri</label><br>
+                <input type="radio" [(ngModel)]="basvuruModel.markaPaylasim" name="marka" value="world"> <label>World İşyeri</label>
+              </div>
+            </fieldset>
+            <fieldset class="vb-fieldset">
+              <legend>Tek Ödeme Koşulları</legend>
+              <div class="form-row">
+                <div class="form-group"><label>Çalışma Şekli</label><select><option>Komisyon+Blokeli</option></select></div>
+                <div class="form-group"><label>Puan(%)</label><input type="number" [(ngModel)]="basvuruModel.puan" name="puan" step="0.001" class="small-input"></div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div *ngIf="aktifSekme === 'kredi'">
+            <fieldset class="vb-fieldset">
+              <legend>Kredibilite Bilgileri</legend>
+              <div class="form-row" style="align-items: flex-start;">
+                <div class="form-group">
+                  <label>Firma Faaliyet Konusu</label>
+                  <textarea [(ngModel)]="basvuruModel.faaliyetKonusu" name="faaliyet" class="long-input" rows="3" style="width: 500px;"></textarea>
+                </div>
+              </div>
+              <div class="form-row" style="align-items: flex-start; margin-top: 10px;">
+                <div class="form-group">
+                  <label>Genel Şube Görüşü</label>
+                  <textarea [(ngModel)]="basvuruModel.subeGorusu" name="gorus" class="long-input" rows="3" style="width: 500px;"></textarea>
+                </div>
+              </div>
+              <fieldset class="vb-fieldset" style="margin-top: 15px; background: #f9f9f9;">
+                <legend>Üye İşyeri Ciro Bilgileri</legend>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Aylık Yurtiçi Ciro</label>
+                    <input type="text" [(ngModel)]="basvuruModel.aylikCiro" name="ciro">
+                    <select [(ngModel)]="basvuruModel.ciroBirim" name="birim"><option value="TRY">TRY</option><option value="USD">USD</option><option value="EUR">EUR</option></select>
+                  </div>
+                </div>
+              </fieldset>
+            </fieldset>
+          </div>
+
+          <div *ngIf="aktifSekme === 'dokuman'">
+            <fieldset class="vb-fieldset">
+              <legend>Zorunlu Başvuru Dokümanları</legend>
+              <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Lütfen üye işyeri başvurusu için gerekli belgeleri aşağıya yükleyiniz. (Desteklenen formatlar: PDF, JPG, PNG)</p>
+
+              <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;">
+
+                <div class="form-group" style="flex: 1 1 30%; min-width: 200px; border: 1px dashed #ccc; padding: 20px; border-radius: 5px; text-align: center; background: #fafafa; box-sizing: border-box;">
+                  <div style="font-size: 30px; margin-bottom: 10px;">📄</div>
+                  <label style="display: block; font-weight: bold; margin-bottom: 10px;">Vergi Levhası *</label>
+                  <input type="file" (change)="dosyaSecildi($event, 'vergiLevhasi')" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" #vergiInput>
+                  <button type="button" (click)="vergiInput.click()" style="background: #0056b3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Dosya Seç</button>
+                  <div style="margin-top: 10px; font-size: 12px; color: green; font-weight: bold;" *ngIf="yuklenenDosyalar?.vergiLevhasi">
+                    ✅ {{ yuklenenDosyalar.vergiLevhasi.name }}
+                  </div>
+                </div>
+
+                <div class="form-group" style="flex: 1 1 30%; min-width: 200px; border: 1px dashed #ccc; padding: 20px; border-radius: 5px; text-align: center; background: #fafafa; box-sizing: border-box;">
+                  <div style="font-size: 30px; margin-bottom: 10px;">✍️</div>
+                  <label style="display: block; font-weight: bold; margin-bottom: 10px;">İmza Sirküleri *</label>
+                  <input type="file" (change)="dosyaSecildi($event, 'imzaSirkuleri')" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" #imzaInput>
+                  <button type="button" (click)="imzaInput.click()" style="background: #0056b3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Dosya Seç</button>
+                  <div style="margin-top: 10px; font-size: 12px; color: green; font-weight: bold;" *ngIf="yuklenenDosyalar?.imzaSirkuleri">
+                    ✅ {{ yuklenenDosyalar.imzaSirkuleri.name }}
+                  </div>
+                </div>
+
+                <div class="form-group" style="flex: 1 1 30%; min-width: 200px; border: 1px dashed #ccc; padding: 20px; border-radius: 5px; text-align: center; background: #fafafa; box-sizing: border-box;">
+                  <div style="font-size: 30px; margin-bottom: 10px;">🪪</div>
+                  <label style="display: block; font-weight: bold; margin-bottom: 10px;">Kimlik Fotokopisi *</label>
+                  <input type="file" (change)="dosyaSecildi($event, 'kimlik')" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" #kimlikInput>
+                  <button type="button" (click)="kimlikInput.click()" style="background: #0056b3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Dosya Seç</button>
+                  <div style="margin-top: 10px; font-size: 12px; color: green; font-weight: bold;" *ngIf="yuklenenDosyalar?.kimlik">
+                    ✅ {{ yuklenenDosyalar.kimlik.name }}
+                  </div>
+                </div>
+
+                <div class="form-group" style="flex: 1 1 45%; min-width: 200px; border: 1px dashed #ccc; padding: 20px; border-radius: 5px; text-align: center; background: #fafafa; box-sizing: border-box;">
+                  <div style="font-size: 30px; margin-bottom: 10px;">📰</div>
+                  <label style="display: block; font-weight: bold; margin-bottom: 10px;">Ticaret Sicil Gazetesi</label>
+                  <input type="file" (change)="dosyaSecildi($event, 'ticaretSicilGazetesi')" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" #ticaretInput>
+                  <button type="button" (click)="ticaretInput.click()" style="background: #0056b3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Dosya Seç</button>
+                  <div style="margin-top: 10px; font-size: 12px; color: green; font-weight: bold;" *ngIf="yuklenenDosyalar?.ticaretSicilGazetesi">
+                    ✅ {{ yuklenenDosyalar.ticaretSicilGazetesi.name }}
+                  </div>
+                </div>
+
+                <div class="form-group" style="flex: 1 1 45%; min-width: 200px; border: 1px dashed #ccc; padding: 20px; border-radius: 5px; text-align: center; background: #fafafa; box-sizing: border-box;">
+                  <div style="font-size: 30px; margin-bottom: 10px;">🤝</div>
+                  <label style="display: block; font-weight: bold; margin-bottom: 10px;">Üye İşyeri Sözleşmesi</label>
+                  <input type="file" (change)="dosyaSecildi($event, 'uyeIsyeriSozlesmesi')" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" #sozlesmeInput>
+                  <button type="button" (click)="sozlesmeInput.click()" style="background: #0056b3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Dosya Seç</button>
+                  <div style="margin-top: 10px; font-size: 12px; color: green; font-weight: bold;" *ngIf="yuklenenDosyalar?.uyeIsyeriSozlesmesi">
+                    ✅ {{ yuklenenDosyalar.uyeIsyeriSozlesmesi.name }}
+                  </div>
+                </div>
+
+              </div>
+            </fieldset>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="text-align: right; padding: 20px; border-top: 2px solid #ffb800; margin-top: 20px; background: #fff;">
+        <button type="submit" [disabled]="basvuruForm.invalid" style="background-color: #ffb800; color: #000; font-weight: bold; padding: 12px 40px; border: 1px solid #c99100; cursor: pointer; font-size: 14px; border-radius: 4px;">
+          💾 BAŞVURUYU KAYDET
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>

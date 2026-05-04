@@ -1,0 +1,41 @@
+<div class="login-wrapper">
+
+  <div class="glass-card left-side">
+    <div class="logo-container mb-4">
+      <img src="/vakif-logo.png" alt="VakıfBank" class="vakif-logo">
+    </div>
+    <h1 class="fw-bold text-dark display-5">Uye Isyeri Basvuru Portalina Hos Geldiniz</h1>
+    <p class="text-secondary mt-4 lead">
+      Giriş yaptıktan sonra yeni başvuru oluşturabilir, mevcut başvuruları izleyebilir ve evrak yükleme adımlarını kolayca tamamlayabilirsiniz.
+    </p>
+  </div>
+
+  <div class="solid-card right-side">
+    <div class="form-header mb-4 text-start">
+      <img src="/vakif-logo.png" alt="VakıfBank" class="vakif-logo-small mb-3">
+      <h3 class="fw-bold mb-1 text-dark">Kullanıcı Girişi</h3>
+      <p class="text-muted small">Devam etmek için bilgilerinizi giriniz.</p>
+    </div>
+
+    <form>
+      <div class="mb-3 text-start">
+        <label class="form-label text-uppercase small fw-bold text-muted">E-POSTA</label>
+        <input type="email" [(ngModel)]="email" name="email" class="form-control" placeholder="ad.soyad@vakifbank.com.tr">
+      </div>
+
+      <div class="mb-4 text-start">
+        <label class="form-label text-uppercase small fw-bold text-muted">ŞİFRE</label>
+        <input type="password" [(ngModel)]="password" name="password" class="form-control" placeholder="••••••••">
+      </div>
+
+      <button type="button" (click)="onLogin()" class="btn btn-warning w-100 py-3 fw-bold shadow-sm">
+        GİRİŞ YAP
+      </button>
+    </form>
+
+    <div class="text-center mt-4 pt-2">
+      <small class="text-muted">Demo kullanıcısı: <span class="fw-bold text-dark">admin@vakifbank.com / admin</span></small>
+    </div>
+  </div>
+
+</div>

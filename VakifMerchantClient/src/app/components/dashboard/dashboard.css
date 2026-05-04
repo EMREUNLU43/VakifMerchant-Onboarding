@@ -1,0 +1,252 @@
+.vb-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #eef1f5;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 11px;
+  color: #333;
+}
+
+/* ÜST BARLAR */
+.vb-top-header {
+  background-color: #ffb800;
+  display: flex;
+  align-items: center;
+  height: 35px;
+  padding-left: 10px;
+}
+
+.vb-logo-box {
+  font-weight: 900;
+  font-size: 14px;
+  color: #000;
+  padding-right: 20px;
+}
+
+.vb-main-nav {
+  display: flex;
+  height: 100%;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255,255,255,0.3);
+  padding: 0 15px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 100%;
+  color: #000;
+}
+
+  .nav-btn.active {
+    background-color: #fff;
+    color: #000;
+  }
+
+.vb-toolbar {
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+  gap: 20px;
+  height: 50px;
+}
+
+.tool-group {
+  display: flex;
+  gap: 15px;
+}
+
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  color: #555;
+}
+
+.customer-search-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 20px;
+  border-left: 1px solid #eee;
+}
+
+.yellow-border-input {
+  border: 1px solid #ffb800;
+  padding: 4px 8px;
+  width: 120px;
+  font-weight: bold;
+}
+
+.user-profile-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* İÇERİK VE KUTULAR (Fieldset Tasarımı Düzeltildi) */
+.vb-content-area {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #fcfcfc;
+}
+
+.page-tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.page-tab {
+  padding: 6px 15px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-bottom: none;
+}
+
+  .page-tab.active {
+    background: #fff;
+    font-weight: bold;
+    border-top: 2px solid #ffb800;
+  }
+
+.vb-fieldset {
+  border: 1px solid #ccc;
+  padding: 10px 15px 15px 15px;
+  margin-bottom: 15px;
+  background-color: transparent;
+}
+
+  .vb-fieldset legend {
+    font-weight: bold;
+    color: #333;
+    padding: 0 5px;
+    width: auto;
+    font-size: 11px;
+  }
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+}
+
+  .form-group label {
+    width: 120px;
+    text-align: right;
+    margin-right: 8px;
+    color: #555;
+  }
+
+input[type="text"], input[type="number"], select, textarea {
+  border: 1px solid #b8b8b8;
+  padding: 3px 5px;
+  font-size: 11px;
+}
+
+.disabled-input {
+  background-color: #f4f4f4;
+  color: #777;
+}
+
+.small-input {
+  width: 60px;
+}
+
+.long-input {
+  width: 250px;
+}
+
+/* SEKMELER */
+.inner-tabs-container {
+  margin-top: 20px;
+}
+
+.inner-tabs-header {
+  display: flex;
+  border-bottom: 1px solid #ffb800;
+}
+
+.inner-tab {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  padding: 8px 15px;
+  margin-right: 2px;
+  cursor: pointer;
+  color: #555;
+}
+
+  .inner-tab.active {
+    background: #fff;
+    font-weight: bold;
+    border-top: 2px solid #ffb800;
+    color: #000;
+  }
+
+.inner-tab-content {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  padding: 15px;
+}
+
+/* TABLOLAR */
+.vb-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+  .vb-data-table th, .vb-data-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: left;
+  }
+
+  .vb-data-table th {
+    background-color: #f0f0f0;
+  }
+
+/* ALT ÇUBUK */
+.vb-bottom-status {
+  background-color: #ffb800;
+  color: #000;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-top: 1px solid #d99c00;
+}
+
+/* --- HATA (VALIDATION) TASARIMLARI --- */
+.invalid-input {
+  border: 1px solid red !important;
+  background-color: #fff0f0 !important;
+}
+
+.error-text {
+  color: red;
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 138px;
+  margin-top: 2px;
+}
+
+button:disabled {
+  background-color: #cccccc !important;
+  border-color: #999999 !important;
+  cursor: not-allowed !important;
+  color: #666 !important;
+}
